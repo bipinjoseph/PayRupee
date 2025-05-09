@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Successful - PayRupee</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .success-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 3rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            color: var(--success-color);
+            margin-bottom: 1.5rem;
+            animation: scale-up 0.5s ease-in-out;
+        }
+
+        .success-title {
+            color: var(--success-color);
+            margin-bottom: 1rem;
+        }
+
+        .success-message {
+            font-size: 1.1rem;
+            color: var(--gray-700);
+            margin-bottom: 2rem;
+        }
+
+        .success-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        @keyframes scale-up {
+            0% {
+                transform: scale(0);
+            }
+            70% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .success-section {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Account Number Styles */
+        .account-number-container {
+            background-color: var(--gray-100);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .account-number-container h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .account-number-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--secondary-color);
+            position: relative;
+        }
+
+        #account-number {
+            flex: 1;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        #copy-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            right: 10px;
+        }
+
+        #copy-button:hover {
+            background-color: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        #copy-button:active {
+            transform: scale(0.95);
+        }
+
+        .account-number-info {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        /* Copy Success Animation */
+        @keyframes copy-success {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .copy-success {
+            animation: copy-success 0.5s ease;
+            background-color: var(--success-color) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html" class="logo-container">
+                        <div class="logo-icon">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <div class="logo-text">
+                            <h1>Pay<span class="logo-highlight">Rupee</span></h1>
+                            <span class="tagline">Transactions Made Easy</span>
+                        </div>
+                    </a>
+                </div>
+                <nav class="main-nav">
+                    <ul class="nav-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    <a href="login.html" class="btn btn-secondary">Login</a>
+                    <a href="register.html" class="btn btn-primary">Register</a>
+                </div>
+                <button class="mobile-menu-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Success Section -->
+    <section class="success-section">
+        <div class="container">
+            <div class="success-container">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="success-title">Account Successfully Created!</h2>
+                <p class="success-message">Congratulations <span id="user-name">User</span>! Your PayRupee account has been created successfully. You can now log in with your credentials to access your dashboard.</p>
+
+                <div class="account-number-container">
+                    <h3>Your Account Number</h3>
+                    <div class="account-number-display">
+                        <span id="account-number">Loading...</span>
+                        <button id="copy-button" title="Copy to clipboard">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <p class="account-number-info">Please save this account number for future reference.</p>
+                </div>
+
+                <div class="success-actions">
+                    <a href="login.html" class="btn btn-primary btn-lg">Log In Now</a>
+                    <a href="index.html" class="btn btn-secondary btn-lg">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/918590191091" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-tooltip">Chat with us</span>
+    </a>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Function to generate a random account number
+        function generateAccountNumber() {
+            // Format: PRXXXX-XXXX-XXXX (PR prefix for PayRupee, followed by 12 digits in groups of 4)
+            const prefix = 'PR';
+            const digits = '0123456789';
+            let accountNumber = prefix;
+
+            // Generate 3 groups of 4 digits
+            for (let group = 0; group < 3; group++) {
+                if (group > 0) accountNumber += '-';
+                for (let i = 0; i < 4; i++) {
+                    accountNumber += digits.charAt(Math.floor(Math.random() * digits.length));
+                }
+            }
+
+            return accountNumber;
+        }
+
+        // Function to handle copying to clipboard
+        function copyToClipboard(text) {
+            // Create a temporary input element
+            const input = document.createElement('input');
+            input.value = text;
+            document.body.appendChild(input);
+
+            // Select and copy the text
+            input.select();
+            document.execCommand('copy');
+
+            // Remove the temporary element
+            document.body.removeChild(input);
+
+            // Show success animation
+            const copyButton = document.getElementById('copy-button');
+            copyButton.classList.add('copy-success');
+            copyButton.innerHTML = '<i class="fas fa-check"></i>';
+
+            // Reset button after animation
+            setTimeout(() => {
+                copyButton.classList.remove('copy-success');
+                copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+            }, 2000);
+        }
+
+        // When the document is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate and display account number
+            const accountNumber = generateAccountNumber();
+            document.getElementById('account-number').textContent = accountNumber;
+
+            // Get user data from localStorage
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+            // Display user name if available
+            if (userData.name) {
+                document.getElementById('user-name').textContent = userData.name;
+            }
+
+            // Store account number in localStorage for future reference
+            userData.accountNumber = accountNumber;
+            localStorage.setItem('userData', JSON.stringify(userData));
+
+            // Add click event to copy button
+            document.getElementById('copy-button').addEventListener('click', function() {
+                copyToClipboard(accountNumber);
+            });
+        });
+    </script>
+</body>
+</html>

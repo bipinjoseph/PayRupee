@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Money - PayRupee</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Transfer Page Specific Styles */
+        .transfer-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-6);
+            margin-bottom: var(--spacing-6);
+        }
+
+        @media (max-width: 992px) {
+            .transfer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .transfer-form-container {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-6);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .transfer-form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--primary-color);
+        }
+
+        .transfer-form-header {
+            margin-bottom: var(--spacing-5);
+        }
+
+        .transfer-form-header h2 {
+            color: var(--secondary-color);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .transfer-form-header p {
+            color: var(--gray-600);
+        }
+
+        .transfer-form .form-group {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .transfer-form label {
+            display: block;
+            margin-bottom: var(--spacing-2);
+            font-weight: var(--font-weight-medium);
+            color: var(--secondary-color);
+        }
+
+        .transfer-form .input-with-icon {
+            position: relative;
+        }
+
+        .transfer-form .input-with-icon i {
+            position: absolute;
+            left: var(--spacing-3);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+        }
+
+        .transfer-form .input-with-icon input,
+        .transfer-form .input-with-icon select {
+            width: 100%;
+            padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) calc(var(--spacing-3) * 2 + 16px);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-base);
+            transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+        }
+
+        .transfer-form .input-with-icon input:focus,
+        .transfer-form .input-with-icon select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+        }
+
+        .transfer-form .btn-transfer {
+            width: 100%;
+            padding: var(--spacing-3);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            margin-top: var(--spacing-4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .transfer-summary {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-6);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .transfer-summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--secondary-color);
+        }
+
+        .transfer-summary-header {
+            margin-bottom: var(--spacing-5);
+        }
+
+        .transfer-summary-header h2 {
+            color: var(--secondary-color);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .transfer-summary-content {
+            margin-bottom: var(--spacing-5);
+        }
+
+        .balance-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-4);
+            padding: var(--spacing-4);
+            background-color: var(--gray-100);
+            border-radius: var(--border-radius);
+        }
+
+        .balance-info-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-4);
+            font-size: 1.5rem;
+        }
+
+        .balance-info-text h3 {
+            font-size: var(--font-size-base);
+            margin-bottom: var(--spacing-1);
+            color: var(--gray-700);
+        }
+
+        .balance-info-text .balance-amount {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--secondary-color);
+        }
+
+        .transfer-note {
+            margin-top: var(--spacing-5);
+            padding: var(--spacing-3);
+            background-color: rgba(var(--primary-color-rgb), 0.05);
+            border-left: 3px solid var(--primary-color);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .transfer-note p {
+            margin-bottom: 0;
+            font-size: var(--font-size-sm);
+            color: var(--gray-700);
+        }
+
+        .transfer-success {
+            display: none;
+            text-align: center;
+            padding: var(--spacing-6);
+        }
+
+        .transfer-success-icon {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: var(--spacing-4);
+            animation: scale-up 0.5s ease-in-out;
+        }
+
+        @keyframes scale-up {
+            0% {
+                transform: scale(0);
+            }
+            70% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .transfer-success h2 {
+            color: var(--success-color);
+            margin-bottom: var(--spacing-3);
+        }
+
+        .transfer-success p {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .transfer-success .btn {
+            margin: 0 var(--spacing-2);
+        }
+
+        .insufficient-funds {
+            color: var(--danger-color);
+            font-size: var(--font-size-sm);
+            margin-top: var(--spacing-2);
+            display: none;
+        }
+
+        .transfer-type-tabs {
+            display: flex;
+            margin-bottom: var(--spacing-4);
+            border-bottom: 1px solid var(--gray-300);
+        }
+
+        .transfer-type-tab {
+            padding: var(--spacing-3) var(--spacing-4);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all var(--transition-normal);
+            font-weight: var(--font-weight-medium);
+            color: var(--gray-600);
+        }
+
+        .transfer-type-tab.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .transfer-type-tab:hover {
+            color: var(--primary-color);
+        }
+
+        .beneficiary-list {
+            margin-top: var(--spacing-4);
+        }
+
+        .beneficiary-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-3);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-3);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .beneficiary-item:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(var(--primary-color-rgb), 0.05);
+        }
+
+        .beneficiary-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--gray-200);
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-3);
+            font-size: 1.2rem;
+        }
+
+        .beneficiary-details {
+            flex: 1;
+        }
+
+        .beneficiary-name {
+            font-weight: var(--font-weight-medium);
+            color: var(--secondary-color);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .beneficiary-account {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="dashboard.html" class="logo-container">
+                        <div class="logo-icon">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <div class="logo-text">
+                            <h1>PayRupee</h1>
+                            <span class="tagline">Transactions Made Easy</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="header-actions">
+                    <div class="notifications">
+                        <button class="notification-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                        <div class="notification-dropdown">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="mark-all-read">Mark all as read</button>
+                            </div>
+                            <div class="notification-list">
+                                <div class="notification-item unread">
+                                    <div class="notification-icon welcome">
+                                        <i class="fas fa-bell"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p>Welcome to PayRupee! Your account is ready.</p>
+                                        <span class="notification-time">Just now</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-menu">
+                        <button class="user-menu-btn">
+                            <img src="images/user-avatar.jpg" alt="User Avatar" class="user-avatar">
+                            <span class="user-name">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown">
+                            <ul>
+                                <li><a href="accounts.html"><i class="fas fa-user"></i> Profile</a></li>
+                                <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                                <li><a href="security.html"><i class="fas fa-shield-alt"></i> Security</a></li>
+                                <li><a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Main Content -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <h3>PayRupee</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="accounts.html">
+                            <i class="fas fa-university"></i>
+                            <span>Accounts</span>
+                        </a>
+                    </li>
+
+                    <li class="active">
+                        <a href="transfer.html">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Transfer</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="deposit.html">
+                            <i class="fas fa-download"></i>
+                            <span>Deposit</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="withdraw.html">
+                            <i class="fas fa-upload"></i>
+                            <span>Withdraw</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Send Money to Others</h1>
+                <p>Transfer funds to other accounts quickly and securely</p>
+            </div>
+
+            <!-- Transfer Form and Summary -->
+            <div class="transfer-container">
+                <!-- Transfer Form -->
+                <div class="transfer-form-container">
+                    <div class="transfer-form-header">
+                        <h2>Make a Transfer</h2>
+                        <p>Enter the details to transfer money</p>
+                    </div>
+
+                    <!-- Transfer form without tabs -->
+
+                    <form id="transfer-form" class="transfer-form">
+                        <div class="form-group">
+                            <label for="from-account">From Account</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-university"></i>
+                                <select id="from-account" name="from-account" required>
+                                    <option value="savings">Savings Account (Primary)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="account-number">Recipient Account Number</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-university"></i>
+                                <input type="text" id="account-number" name="account-number" placeholder="Enter account number" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Amount (₹)</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-rupee-sign"></i>
+                                <input type="number" id="amount" name="amount" placeholder="Enter amount" min="1" required>
+                            </div>
+                            <div id="insufficient-funds" class="insufficient-funds">
+                                <i class="fas fa-exclamation-circle"></i> Insufficient funds in your account
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description (Optional)</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-pen"></i>
+                                <input type="text" id="description" name="description" placeholder="Add a note for this transfer">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-transfer">Transfer Money</button>
+                    </form>
+
+                    <div class="transfer-note">
+                        <p><i class="fas fa-info-circle"></i> Transfers may take up to 24 hours to complete.</p>
+                    </div>
+                </div>
+
+                <!-- Transfer Summary -->
+                <div class="transfer-summary">
+                    <div class="transfer-summary-header">
+                        <h2>Transfer Summary</h2>
+                    </div>
+                    <div class="transfer-summary-content">
+                        <div class="balance-info">
+                            <div class="balance-info-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="balance-info-text">
+                                <h3>Available Balance</h3>
+                                <div class="balance-amount">₹<span id="current-balance">0.00</span></div>
+                            </div>
+                        </div>
+                        <div class="balance-info">
+                            <div class="balance-info-icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <div class="balance-info-text">
+                                <h3>Transfer Amount</h3>
+                                <div class="balance-amount">₹<span id="transfer-amount">0.00</span></div>
+                            </div>
+                        </div>
+                        <div class="balance-info">
+                            <div class="balance-info-icon">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div class="balance-info-text">
+                                <h3>Remaining Balance</h3>
+                                <div class="balance-amount">₹<span id="new-balance">0.00</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent beneficiaries section removed -->
+                </div>
+            </div>
+
+            <!-- Transfer Success (Hidden by default) -->
+            <div id="transfer-success" class="transfer-success">
+                <div class="transfer-success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2>Transfer Successful!</h2>
+                <p>Your transfer of ₹<span id="success-amount">0.00</span> has been initiated successfully.</p>
+                <div class="success-actions">
+                    <a href="dashboard.html" class="btn btn-secondary">Back to Dashboard</a>
+                    <a href="transfer.html" class="btn btn-primary">Make Another Transfer</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/transactions.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get elements
+            const transferForm = document.getElementById('transfer-form');
+            const amountInput = document.getElementById('amount');
+            const transferAmountDisplay = document.getElementById('transfer-amount');
+            const currentBalanceDisplay = document.getElementById('current-balance');
+            const newBalanceDisplay = document.getElementById('new-balance');
+            const transferSuccess = document.getElementById('transfer-success');
+            const successAmount = document.getElementById('success-amount');
+            const insufficientFunds = document.getElementById('insufficient-funds');
+            // Simplified transfer form without tabs
+
+            // Get current balance from localStorage or set to 0
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const currentBalance = userData.balance || 0;
+            currentBalanceDisplay.textContent = currentBalance.toFixed(2);
+
+            // Update transfer amount and new balance when amount changes
+            amountInput.addEventListener('input', function() {
+                const amount = parseFloat(this.value) || 0;
+                transferAmountDisplay.textContent = amount.toFixed(2);
+                const newBalance = currentBalance - amount;
+                newBalanceDisplay.textContent = newBalance.toFixed(2);
+
+                // Check if sufficient funds
+                if (amount > currentBalance) {
+                    insufficientFunds.style.display = 'block';
+                    transferForm.querySelector('button[type="submit"]').disabled = true;
+                    newBalanceDisplay.style.color = 'var(--danger-color)';
+                } else {
+                    insufficientFunds.style.display = 'none';
+                    transferForm.querySelector('button[type="submit"]').disabled = false;
+                    newBalanceDisplay.style.color = '';
+                }
+            });
+
+            // Simplified transfer form with only account number field
+
+            // Handle form submission
+            transferForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const amount = parseFloat(amountInput.value);
+                if (!amount || amount <= 0) {
+                    alert('Please enter a valid amount');
+                    return;
+                }
+
+                if (amount > currentBalance) {
+                    alert('Insufficient funds in your account');
+                    return;
+                }
+
+                // Get recipient account and description
+                const toAccount = document.getElementById('account-number').value;
+                if (!toAccount) {
+                    alert('Please enter a recipient account number');
+                    return;
+                }
+
+                const description = document.getElementById('description').value || 'Transfer';
+
+                // Show loading state
+                const submitButton = transferForm.querySelector('button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+                // Simulate API call delay
+                setTimeout(() => {
+                    try {
+                        // Process transfer transaction
+                        const transaction = window.transactionManager.transfer(toAccount, amount, description);
+
+                        // Update UI with new balance
+                        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+                        // Show success message
+                        transferForm.closest('.transfer-container').style.display = 'none';
+                        transferSuccess.style.display = 'block';
+                        successAmount.textContent = amount.toFixed(2);
+
+                        // Show toast notification
+                        showToast(`Transfer of ₹${amount.toFixed(2)} to ${toAccount} successful!`, 'success');
+
+                        // Reset form
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalText;
+                        transferForm.reset();
+                    } catch (error) {
+                        // Show error message
+                        showToast(`Error: ${error.message}`, 'error');
+
+                        // Reset button state
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalText;
+                    }
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

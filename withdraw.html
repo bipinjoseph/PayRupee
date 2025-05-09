@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash Out - PayRupee</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Withdraw Page Specific Styles */
+        .withdraw-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-6);
+            margin-bottom: var(--spacing-6);
+        }
+
+        @media (max-width: 992px) {
+            .withdraw-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .withdraw-form-container {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-6);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .withdraw-form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--primary-color);
+        }
+
+        .withdraw-form-header {
+            margin-bottom: var(--spacing-5);
+        }
+
+        .withdraw-form-header h2 {
+            color: var(--secondary-color);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .withdraw-form-header p {
+            color: var(--gray-600);
+        }
+
+        .withdraw-form .form-group {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .withdraw-form label {
+            display: block;
+            margin-bottom: var(--spacing-2);
+            font-weight: var(--font-weight-medium);
+            color: var(--secondary-color);
+        }
+
+        .withdraw-form .input-with-icon {
+            position: relative;
+        }
+
+        .withdraw-form .input-with-icon i {
+            position: absolute;
+            left: var(--spacing-3);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+        }
+
+        .withdraw-form .input-with-icon input,
+        .withdraw-form .input-with-icon select {
+            width: 100%;
+            padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) calc(var(--spacing-3) * 2 + 16px);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-base);
+            transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+        }
+
+        .withdraw-form .input-with-icon input:focus,
+        .withdraw-form .input-with-icon select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+        }
+
+        .withdraw-form .btn-withdraw {
+            width: 100%;
+            padding: var(--spacing-3);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            margin-top: var(--spacing-4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .withdraw-summary {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-6);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .withdraw-summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--secondary-color);
+        }
+
+        .withdraw-summary-header {
+            margin-bottom: var(--spacing-5);
+        }
+
+        .withdraw-summary-header h2 {
+            color: var(--secondary-color);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .withdraw-summary-content {
+            margin-bottom: var(--spacing-5);
+        }
+
+        .balance-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-4);
+            padding: var(--spacing-4);
+            background-color: var(--gray-100);
+            border-radius: var(--border-radius);
+        }
+
+        .balance-info-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-4);
+            font-size: 1.5rem;
+        }
+
+        .balance-info-text h3 {
+            font-size: var(--font-size-base);
+            margin-bottom: var(--spacing-1);
+            color: var(--gray-700);
+        }
+
+        .balance-info-text .balance-amount {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--secondary-color);
+        }
+
+        .withdraw-methods {
+            margin-top: var(--spacing-5);
+        }
+
+        .withdraw-methods h3 {
+            font-size: var(--font-size-base);
+            margin-bottom: var(--spacing-3);
+            color: var(--secondary-color);
+        }
+
+        .method-options {
+            display: flex;
+            gap: var(--spacing-3);
+            flex-wrap: wrap;
+        }
+
+        .method-option {
+            flex: 1;
+            min-width: 120px;
+            padding: var(--spacing-3);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .method-option:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(var(--primary-color-rgb), 0.05);
+        }
+
+        .method-option.active {
+            border-color: var(--primary-color);
+            background-color: rgba(var(--primary-color-rgb), 0.1);
+        }
+
+        .method-option i {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-2);
+            color: var(--secondary-color);
+        }
+
+        .method-option span {
+            display: block;
+            font-size: var(--font-size-sm);
+            color: var(--gray-700);
+        }
+
+        .withdraw-note {
+            margin-top: var(--spacing-5);
+            padding: var(--spacing-3);
+            background-color: rgba(var(--primary-color-rgb), 0.05);
+            border-left: 3px solid var(--primary-color);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .withdraw-note p {
+            margin-bottom: 0;
+            font-size: var(--font-size-sm);
+            color: var(--gray-700);
+        }
+
+        .withdraw-success {
+            display: none;
+            text-align: center;
+            padding: var(--spacing-6);
+        }
+
+        .withdraw-success-icon {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: var(--spacing-4);
+            animation: scale-up 0.5s ease-in-out;
+        }
+
+        @keyframes scale-up {
+            0% {
+                transform: scale(0);
+            }
+            70% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .withdraw-success h2 {
+            color: var(--success-color);
+            margin-bottom: var(--spacing-3);
+        }
+
+        .withdraw-success p {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .withdraw-success .btn {
+            margin: 0 var(--spacing-2);
+        }
+
+        .insufficient-funds {
+            color: var(--danger-color);
+            font-size: var(--font-size-sm);
+            margin-top: var(--spacing-2);
+            display: none;
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="dashboard.html" class="logo-container">
+                        <div class="logo-icon">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <div class="logo-text">
+                            <h1>PayRupee</h1>
+                            <span class="tagline">Transactions Made Easy</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="header-actions">
+                    <div class="notifications">
+                        <button class="notification-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                        <div class="notification-dropdown">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="mark-all-read">Mark all as read</button>
+                            </div>
+                            <div class="notification-list">
+                                <div class="notification-item unread">
+                                    <div class="notification-icon welcome">
+                                        <i class="fas fa-bell"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p>Welcome to PayRupee! Your account is ready.</p>
+                                        <span class="notification-time">Just now</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-menu">
+                        <button class="user-menu-btn">
+                            <img src="images/user-avatar.jpg" alt="User Avatar" class="user-avatar">
+                            <span class="user-name">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown">
+                            <ul>
+                                <li><a href="accounts.html"><i class="fas fa-user"></i> Profile</a></li>
+                                <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                                <li><a href="security.html"><i class="fas fa-shield-alt"></i> Security</a></li>
+                                <li><a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Main Content -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <h3>PayRupee</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="accounts.html">
+                            <i class="fas fa-university"></i>
+                            <span>Accounts</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="transfer.html">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Transfer</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="deposit.html">
+                            <i class="fas fa-download"></i>
+                            <span>Deposit</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="withdraw.html">
+                            <i class="fas fa-upload"></i>
+                            <span>Withdraw</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Cash Out From Your Account</h1>
+                <p>Withdraw money quickly and securely</p>
+            </div>
+
+            <!-- Withdraw Form and Summary -->
+            <div class="withdraw-container">
+                <!-- Withdraw Form -->
+                <div class="withdraw-form-container">
+                    <div class="withdraw-form-header">
+                        <h2>Make a Withdrawal</h2>
+                        <p>Enter the amount you want to withdraw from your account</p>
+                    </div>
+                    <form id="withdraw-form" class="withdraw-form">
+                        <div class="form-group">
+                            <label for="account">Select Account</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-university"></i>
+                                <select id="account" name="account" required>
+                                    <option value="savings">Savings Account (Primary)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount (₹)</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-rupee-sign"></i>
+                                <input type="number" id="amount" name="amount" placeholder="Enter amount" min="100" step="100" required>
+                            </div>
+                            <small class="form-text">Minimum withdrawal amount: ₹100</small>
+                            <div id="insufficient-funds" class="insufficient-funds">
+                                <i class="fas fa-exclamation-circle"></i> Insufficient funds in your account
+                            </div>
+                        </div>
+                        <!-- Withdrawal Method section removed -->
+                        <div class="form-group">
+                            <label for="description">Description (Optional)</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-pen"></i>
+                                <input type="text" id="description" name="description" placeholder="Add a note for this withdrawal">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-withdraw">Proceed to Withdraw</button>
+                    </form>
+                    <div class="withdraw-note">
+                        <p><i class="fas fa-info-circle"></i> Funds will be transferred to your selected account within 24 hours.</p>
+                    </div>
+                </div>
+
+                <!-- Withdraw Summary -->
+                <div class="withdraw-summary">
+                    <div class="withdraw-summary-header">
+                        <h2>Account Summary</h2>
+                    </div>
+                    <div class="withdraw-summary-content">
+                        <div class="balance-info">
+                            <div class="balance-info-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="balance-info-text">
+                                <h3>Current Balance</h3>
+                                <div class="balance-amount">₹<span id="current-balance">0.00</span></div>
+                            </div>
+                        </div>
+                        <div class="balance-info">
+                            <div class="balance-info-icon">
+                                <i class="fas fa-upload"></i>
+                            </div>
+                            <div class="balance-info-text">
+                                <h3>Withdrawal Amount</h3>
+                                <div class="balance-amount">₹<span id="withdraw-amount">0.00</span></div>
+                            </div>
+                        </div>
+                        <div class="balance-info">
+                            <div class="balance-info-icon">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div class="balance-info-text">
+                                <h3>New Balance After Withdrawal</h3>
+                                <div class="balance-amount">₹<span id="new-balance">0.00</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="withdraw-methods">
+                        <h3>Recent Withdrawals</h3>
+                        <div class="recent-withdrawals">
+                            <p class="text-center text-muted">No recent withdrawals</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Withdraw Success (Hidden by default) -->
+            <div id="withdraw-success" class="withdraw-success">
+                <div class="withdraw-success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2>Withdrawal Initiated!</h2>
+                <p>Your withdrawal request of ₹<span id="success-amount">0.00</span> has been successfully initiated. The funds will be transferred to your account within 24 hours.</p>
+                <div class="success-actions">
+                    <a href="dashboard.html" class="btn btn-secondary">Back to Dashboard</a>
+                    <a href="withdraw.html" class="btn btn-primary">Make Another Withdrawal</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/transactions.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get elements
+            const withdrawForm = document.getElementById('withdraw-form');
+            const amountInput = document.getElementById('amount');
+            const withdrawAmountDisplay = document.getElementById('withdraw-amount');
+            const currentBalanceDisplay = document.getElementById('current-balance');
+            const newBalanceDisplay = document.getElementById('new-balance');
+            // Withdrawal method options removed
+            const withdrawSuccess = document.getElementById('withdraw-success');
+            const successAmount = document.getElementById('success-amount');
+            const insufficientFunds = document.getElementById('insufficient-funds');
+
+            // Get current balance from localStorage or set to 0
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const currentBalance = userData.balance || 0;
+            currentBalanceDisplay.textContent = currentBalance.toFixed(2);
+
+            // Update withdraw amount and new balance when amount changes
+            amountInput.addEventListener('input', function() {
+                const amount = parseFloat(this.value) || 0;
+                withdrawAmountDisplay.textContent = amount.toFixed(2);
+                const newBalance = currentBalance - amount;
+                newBalanceDisplay.textContent = newBalance.toFixed(2);
+
+                // Check if sufficient funds
+                if (amount > currentBalance) {
+                    insufficientFunds.style.display = 'block';
+                    withdrawForm.querySelector('button[type="submit"]').disabled = true;
+                    newBalanceDisplay.style.color = 'var(--danger-color)';
+                } else {
+                    insufficientFunds.style.display = 'none';
+                    withdrawForm.querySelector('button[type="submit"]').disabled = false;
+                    newBalanceDisplay.style.color = '';
+                }
+            });
+
+            // Withdrawal method selection removed
+
+            // Handle form submission
+            withdrawForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const amount = parseFloat(amountInput.value);
+                if (!amount || amount < 100) {
+                    alert('Please enter a valid amount (minimum ₹100)');
+                    return;
+                }
+
+                if (amount > currentBalance) {
+                    alert('Insufficient funds in your account');
+                    return;
+                }
+
+                // Get description if provided
+                const description = document.getElementById('description').value || 'Withdrawal';
+
+                // Show loading state
+                const submitButton = withdrawForm.querySelector('button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+                // Simulate API call delay
+                setTimeout(() => {
+                    try {
+                        // Process withdrawal transaction
+                        const transaction = window.transactionManager.withdraw(amount, description);
+
+                        // Update UI with new balance
+                        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+                        // Show success message
+                        withdrawForm.closest('.withdraw-container').style.display = 'none';
+                        withdrawSuccess.style.display = 'block';
+                        successAmount.textContent = amount.toFixed(2);
+
+                        // Show toast notification
+                        showToast(`Withdrawal of ₹${amount.toFixed(2)} successful!`, 'success');
+
+                        // Reset form
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalText;
+                        withdrawForm.reset();
+                    } catch (error) {
+                        // Show error message
+                        showToast(`Error: ${error.message}`, 'error');
+
+                        // Reset button state
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalText;
+                    }
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
